@@ -1,16 +1,15 @@
-# React + Vite
+# Amoxcalli
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Plataforma de lectura digital donde puedes explorar, suscribirte y leer libros desde cualquier dispositivo. Inspirada en las culturas mesoamericanas del conocimiento.
 
-Currently, two official plugins are available:
+## Funcionalidades
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+- **Registro e inicio de sesión** — Crea tu cuenta gratuita y accede a la plataforma
+- **Catálogo de libros** — Explora el catálogo filtrando por género, idioma o autor
+- **Dos planes de suscripción** — Estándar ($79.99 MXN) y Premium ($149.99 MXN), ambos por 3 meses
+- **Lector digital** — Lee tus libros con progreso automático que guarda dónde te quedaste
+- **Biblioteca personal** — Guarda y organiza tus libros adquiridos
+- **Compra de libros individuales** — Adquiere libros sueltos sin necesidad de suscripción
+- **Reseñas y opiniones** — Califica y comenta los libros que leas
+- **Favoritos y lista de deseos** — Guarda libros para leer después
+- **Panel de administrador** — Agrega, edita y elimina libros del catálogo
