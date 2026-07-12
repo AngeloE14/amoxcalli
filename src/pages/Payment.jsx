@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { librosAPI, comprasAPI } from '../services/api';
+import { librosAPI, pagosAPI } from '../services/api';
 import { useToast } from '../context/ToastContext';
-import { useEffect } from 'react';
 import LIBROS_MOCK from '../data/mockBooks';
 
 export default function Pago() {
@@ -33,7 +32,7 @@ export default function Pago() {
     e.preventDefault();
     setProcesando(true);
     try {
-      await comprasAPI.create({ bookId: id, paymentMethod: metodo });
+      await pagosAPI.create({ libro: id, monto: libro.precio, metodoPago: metodo, idTransaccion: 'TXN-' + Date.now() });
       agregarToast('¡Compra realizada con éxito!');
       navegar('/library');
     } catch {
@@ -58,12 +57,12 @@ export default function Pago() {
       <div className="payment-layout">
         <div className="payment-book-info">
           <div className="payment-book-cover">
-            {libro.coverUrl ? <img src={libro.coverUrl} alt={libro.title} /> : <div className="book-card-placeholder large">{libro.title[0]}</div>}
+            {libro.portada ? <img src={libro.portada} alt={libro.titulo} /> : <div className="book-card-placeholder large">{libro.titulo[0]}</div>}
           </div>
           <div>
-            <h2>{libro.title}</h2>
-            <p className="book-detail-author">por {libro.author}</p>
-            <p className="payment-price">${libro.price?.toFixed(2)} MXN</p>
+            <h2>{libro.titulo}</h2>
+            <p className="book-detail-author">por {libro.autor}</p>
+            <p className="payment-price">${libro.precio?.toFixed(2)} MXN</p>
           </div>
         </div>
 
@@ -106,10 +105,10 @@ export default function Pago() {
           )}
           <div className="payment-summary">
             <span>Total a pagar:</span>
-            <span className="payment-total">${libro.price?.toFixed(2)} MXN</span>
+            <span className="payment-total">${libro.precio?.toFixed(2)} MXN</span>
           </div>
           <button type="submit" className="btn btn-primary btn-lg" disabled={procesando}>
-            {procesando ? 'Procesando...' : `Pagar $${libro.price?.toFixed(2)} MXN`}
+            {procesando ? 'Procesando...' : `Pagar $${libro.precio?.toFixed(2)} MXN`}
           </button>
           <p className="payment-note">Pago simulado. No se realizará ningún cargo real.</p>
         </form>

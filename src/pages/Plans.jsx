@@ -26,13 +26,13 @@ export default function Planes() {
         {PLANS.map((plan, indice) => (
           <div key={plan._id} className={`plan-card ${indice === PLANS.length - 1 ? 'featured' : ''} ${seleccionado === plan._id ? 'selected' : ''}`}>
             {indice === PLANS.length - 1 && <div className="plan-badge">Popular</div>}
-            <h3>{plan.name}</h3>
+            <h3>{plan.nombre}</h3>
             <div className="plan-price">
               <span className="currency">$</span>
-              <span className="amount">{plan.price}</span>
+              <span className="amount">{plan.precio}</span>
               <span className="period">MXN / 3 meses</span>
             </div>
-            <p className="plan-description">{plan.description}</p>
+            <p className="plan-description">{plan.descripcion}</p>
             <ul className="plan-features">
               {plan.features.map((caracteristica, i) => (
                 <li key={i} className={plan.restricted && i > 1 ? 'restricted' : ''}>

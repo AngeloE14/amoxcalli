@@ -12,8 +12,8 @@ export default function AdminLibros() {
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [editandoId, setEditandoId] = useState(null);
   const [formulario, setFormulario] = useState({
-    title: '', author: '', description: '', coverUrl: '', genre: 'Novela',
-    language: 'Español', price: '179.99', pages: '0', content: '',
+    titulo: '', autor: '', descripcion: '', portada: '', genero: 'Novela',
+    idioma: 'Español', precio: '179.99', paginas: '0', contenido: '',
   });
 
   useEffect(() => { cargarLibros(); }, []);
@@ -28,8 +28,8 @@ export default function AdminLibros() {
 
   const limpiarFormulario = () => {
     setFormulario({
-      title: '', author: '', description: '', coverUrl: '', genre: 'Novela',
-      language: 'Español', price: '179.99', pages: '0', content: '',
+      titulo: '', autor: '', descripcion: '', portada: '', genero: 'Novela',
+      idioma: 'Español', precio: '179.99', paginas: '0', contenido: '',
     });
     setEditandoId(null);
     setMostrarFormulario(false);
@@ -37,7 +37,7 @@ export default function AdminLibros() {
 
   const manejarEnvio = async (e) => {
     e.preventDefault();
-    const carga = { ...formulario, price: parseFloat(formulario.price), pages: parseInt(formulario.pages) || 0 };
+    const carga = { ...formulario, precio: parseFloat(formulario.precio), paginas: parseInt(formulario.paginas) || 0 };
     try {
       if (editandoId) {
         await librosAPI.update(editandoId, carga);
@@ -61,9 +61,9 @@ export default function AdminLibros() {
 
   const manejarEditar = (libro) => {
     setFormulario({
-      title: libro.title, author: libro.author, description: libro.description,
-      coverUrl: libro.coverUrl || '', genre: libro.genre, language: libro.language || 'Español',
-      price: String(libro.price || 179.99), pages: String(libro.pages || 0), content: libro.content || '',
+      titulo: libro.titulo, autor: libro.autor, descripcion: libro.descripcion,
+      portada: libro.portada || '', genero: libro.genero, idioma: libro.idioma || 'Español',
+      precio: String(libro.precio || 179.99), paginas: String(libro.paginas || 0), contenido: libro.contenido || '',
     });
     setEditandoId(libro._id);
     setMostrarFormulario(true);
@@ -96,41 +96,41 @@ export default function AdminLibros() {
           <div className="admin-form-grid">
             <div className="input-group">
               <label>Título</label>
-              <input type="text" value={formulario.title} onChange={(e) => setFormulario({ ...formulario, title: e.target.value })} required />
+              <input type="text" value={formulario.titulo} onChange={(e) => setFormulario({ ...formulario, titulo: e.target.value })} required />
             </div>
             <div className="input-group">
               <label>Autor</label>
-              <input type="text" value={formulario.author} onChange={(e) => setFormulario({ ...formulario, author: e.target.value })} required />
+              <input type="text" value={formulario.autor} onChange={(e) => setFormulario({ ...formulario, autor: e.target.value })} required />
             </div>
             <div className="input-group">
               <label>Género</label>
-              <select value={formulario.genre} onChange={(e) => setFormulario({ ...formulario, genre: e.target.value })}>
+              <select value={formulario.genero} onChange={(e) => setFormulario({ ...formulario, genero: e.target.value })}>
                 {GENEROS.map((g) => <option key={g} value={g}>{g}</option>)}
               </select>
             </div>
             <div className="input-group">
               <label>Idioma</label>
-              <input type="text" value={formulario.language} onChange={(e) => setFormulario({ ...formulario, language: e.target.value })} />
+              <input type="text" value={formulario.idioma} onChange={(e) => setFormulario({ ...formulario, idioma: e.target.value })} />
             </div>
             <div className="input-group">
               <label>Precio (MXN)</label>
-              <input type="number" step="0.01" value={formulario.price} onChange={(e) => setFormulario({ ...formulario, price: e.target.value })} />
+              <input type="number" step="0.01" value={formulario.precio} onChange={(e) => setFormulario({ ...formulario, precio: e.target.value })} />
             </div>
             <div className="input-group">
               <label>Páginas</label>
-              <input type="number" value={formulario.pages} onChange={(e) => setFormulario({ ...formulario, pages: e.target.value })} />
+              <input type="number" value={formulario.paginas} onChange={(e) => setFormulario({ ...formulario, paginas: e.target.value })} />
             </div>
             <div className="input-group full-width">
               <label>URL de portada</label>
-              <input type="text" value={formulario.coverUrl} onChange={(e) => setFormulario({ ...formulario, coverUrl: e.target.value })} />
+              <input type="text" value={formulario.portada} onChange={(e) => setFormulario({ ...formulario, portada: e.target.value })} />
             </div>
             <div className="input-group full-width">
               <label>Descripción</label>
-              <textarea value={formulario.description} onChange={(e) => setFormulario({ ...formulario, description: e.target.value })} required rows={3} />
+              <textarea value={formulario.descripcion} onChange={(e) => setFormulario({ ...formulario, descripcion: e.target.value })} required rows={3} />
             </div>
             <div className="input-group full-width">
               <label>Contenido del libro</label>
-              <textarea value={formulario.content} onChange={(e) => setFormulario({ ...formulario, content: e.target.value })} rows={6} />
+              <textarea value={formulario.contenido} onChange={(e) => setFormulario({ ...formulario, contenido: e.target.value })} rows={6} />
             </div>
           </div>
           <div className="admin-form-actions">
@@ -151,11 +151,11 @@ export default function AdminLibros() {
             <tbody>
               {libros.map((libro) => (
                 <tr key={libro._id}>
-                  <td>{libro.title}</td>
-                  <td>{libro.author}</td>
-                  <td>{libro.genre}</td>
-                  <td>{libro.language}</td>
-                  <td>${libro.price?.toFixed(2)} MXN</td>
+                  <td>{libro.titulo}</td>
+                  <td>{libro.autor}</td>
+                  <td>{libro.genero}</td>
+                  <td>{libro.idioma}</td>
+                  <td>${libro.precio?.toFixed(2)} MXN</td>
                   <td className="admin-actions">
                     <button className="btn btn-sm btn-outline" onClick={() => manejarEditar(libro)}>Editar</button>
                     <button className="btn btn-sm btn-danger" onClick={() => manejarEliminar(libro._id)}>Eliminar</button>

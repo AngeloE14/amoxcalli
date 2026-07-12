@@ -1,14 +1,14 @@
 export default function PlanCard({ plan, onSelect, selected, featured }) {
-  const months = Math.round(plan.durationDays / 30);
+  const meses = Math.round(plan.duracionDias / 30);
   return (
     <div className={`plan-card ${featured ? 'plan-featured' : ''} ${selected ? 'plan-card-selected' : ''}`}>
       {featured && <span className="plan-badge">Popular</span>}
-      <h3>{plan.name}</h3>
-      <p className="plan-price">${plan.price.toFixed(2)}<span>/mes</span></p>
-      <p className="plan-desc">{plan.description}</p>
+      <h3>{plan.nombre}</h3>
+      <p className="plan-price">${plan.precio.toFixed(2)}<span>/mes</span></p>
+      <p className="plan-desc">{plan.descripcion}</p>
       <ul className="plan-features">
-        <li>{plan.maxBooks ? `Hasta ${plan.maxBooks} libros` : 'Libros ilimitados'}</li>
-        <li>{months} meses de acceso</li>
+        <li>{plan.maxLibros ? `Hasta ${plan.maxLibros} libros` : 'Libros ilimitados'}</li>
+        <li>{meses} meses de acceso</li>
         <li>Reseña y guarda libros</li>
         <li>Compra libros individuales</li>
       </ul>

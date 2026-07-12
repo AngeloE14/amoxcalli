@@ -31,22 +31,16 @@ export default function Navbar() {
               <Link to="/library" className={`navbar-link ${estaActiva('/library') ? 'active' : ''}`} onClick={() => setMenuAbierto(false)}>
                 Mi Biblioteca
               </Link>
-              <Link to="/favorites" className={`navbar-link ${estaActiva('/favorites') ? 'active' : ''}`} onClick={() => setMenuAbierto(false)}>
-                Favoritos
+              <Link to="/purchase-history" className={`navbar-link ${estaActiva('/purchase-history') ? 'active' : ''}`} onClick={() => setMenuAbierto(false)}>
+                Historial
               </Link>
-              <Link to="/wishlist" className={`navbar-link ${estaActiva('/wishlist') ? 'active' : ''}`} onClick={() => setMenuAbierto(false)}>
-                Lista de Deseos
-              </Link>
-              <Link to="/subscription" className={`navbar-link ${estaActiva('/subscription') ? 'active' : ''}`} onClick={() => setMenuAbierto(false)}>
-                Mi Suscripción
-              </Link>
-              {usuario.role === 'admin' && (
+              {usuario.rol === 'admin' && (
                 <Link to="/admin/books" className={`navbar-link ${estaActiva('/admin/books') ? 'active' : ''}`} onClick={() => setMenuAbierto(false)}>
                   Admin
                 </Link>
               )}
               <Link to="/profile" className={`navbar-link ${estaActiva('/profile') ? 'active' : ''}`} onClick={() => setMenuAbierto(false)}>
-                {usuario.name}
+                {usuario.nombre}
               </Link>
               <button onClick={() => { cerrarSesion(); setMenuAbierto(false); }} className="btn btn-outline btn-sm">
                 Cerrar Sesión

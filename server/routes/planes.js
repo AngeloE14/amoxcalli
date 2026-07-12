@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import Plan from '../models/Plan.js';
+import Plan from '../models/Planes.js';
 
 const router = Router();
 

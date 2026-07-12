@@ -18,7 +18,7 @@ export function ProveedorAuth({ children }) {
   }, []);
 
   const iniciarSesion = async (correo, contrasena) => {
-    const { data } = await authAPI.login({ email: correo, password: contrasena });
+    const { data } = await authAPI.login({ correo, contraseña: contrasena });
     localStorage.setItem('token', data.token);
     localStorage.setItem('usuario', JSON.stringify(data.user));
     setUsuario(data.user);
@@ -26,7 +26,7 @@ export function ProveedorAuth({ children }) {
   };
 
   const registrarUsuario = async (nombre, correo, contrasena) => {
-    const { data } = await authAPI.register({ name: nombre, email: correo, password: contrasena });
+    const { data } = await authAPI.register({ nombre, correo, contraseña: contrasena });
     localStorage.setItem('token', data.token);
     localStorage.setItem('usuario', JSON.stringify(data.user));
     setUsuario(data.user);

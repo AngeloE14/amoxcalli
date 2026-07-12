@@ -2,17 +2,12 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import rutasAuth from './routes/auth.js';
-import rutasPlanes from './routes/plans.js';
-import rutasLibros from './routes/books.js';
-import rutasSuscripciones from './routes/subscriptions.js';
-import rutasResenas from './routes/reviews.js';
-import rutasBiblioteca from './routes/library.js';
-import rutasCompras from './routes/purchases.js';
-import rutasProgresoLectura from './routes/readingProgress.js';
-import rutasFavoritos from './routes/favorites.js';
-import rutasListaDeseos from './routes/wishlist.js';
-import rutasTransacciones from './routes/transactions.js';
+import rutasAuth from './routes/autenticacion.js';
+import rutasLibros from './routes/libros.js';
+import rutasPlanes from './routes/planes.js';
+import rutasBiblioteca from './routes/biblioteca.js';
+import rutasPagos from './routes/pagos.js';
+import rutasCategorias from './routes/categorias.js';
 
 dotenv.config();
 
@@ -26,16 +21,11 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/amoxcalli')
   .catch((error) => console.error('Error al conectar con MongoDB:', error));
 
 app.use('/api/auth', rutasAuth);
-app.use('/api/plans', rutasPlanes);
 app.use('/api/books', rutasLibros);
-app.use('/api/subscriptions', rutasSuscripciones);
-app.use('/api/reviews', rutasResenas);
+app.use('/api/plans', rutasPlanes);
 app.use('/api/library', rutasBiblioteca);
-app.use('/api/purchases', rutasCompras);
-app.use('/api/reading-progress', rutasProgresoLectura);
-app.use('/api/favorites', rutasFavoritos);
-app.use('/api/wishlist', rutasListaDeseos);
-app.use('/api/transactions', rutasTransacciones);
+app.use('/api/payments', rutasPagos);
+app.use('/api/categories', rutasCategorias);
 
 const PUERTO = process.env.PORT || 4000;
 app.listen(PUERTO, () => {

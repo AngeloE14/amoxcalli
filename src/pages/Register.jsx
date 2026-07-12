@@ -56,7 +56,7 @@ export default function Register() {
         <div className="input-group">
           <label htmlFor="contrasena-reg">Contraseña</label>
           <div className="password-wrapper">
-            <input id="contrasena-reg" type={mostrarContrasena ? 'text' : 'password'} placeholder="Mínimo 6 caracteres" value={contrasena} onChange={(e) => setContrasena(e.target.value)} required minLength={6} />
+            <input id="contrasena-reg" type={mostrarContrasena ? 'text' : 'password'} placeholder="Mínimo 8 caracteres" value={contrasena} onChange={(e) => setContrasena(e.target.value)} required minLength={8} />
             <button type="button" className="password-toggle" onClick={() => setMostrarContrasena(!mostrarContrasena)} tabIndex={-1}>
               {mostrarContrasena ? (
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">

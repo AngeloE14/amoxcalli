@@ -19,7 +19,7 @@ export default function MiBiblioteca() {
 
   const filtrados = elementos.filter((item) => {
     if (filtro === 'todos') return true;
-    return item.purchaseType === filtro;
+    return item.tipoCompra === filtro;
   });
 
   if (cargando) return (
@@ -42,18 +42,18 @@ export default function MiBiblioteca() {
               Todos ({elementos.length})
             </button>
             <button className={`genre-tab ${filtro === 'subscription' ? 'active' : ''}`} onClick={() => setFiltro('subscription')}>
-              Por suscripción ({elementos.filter((e) => e.purchaseType === 'subscription').length})
+              Por suscripción ({elementos.filter((e) => e.tipoCompra === 'subscription').length})
             </button>
             <button className={`genre-tab ${filtro === 'permanent' ? 'active' : ''}`} onClick={() => setFiltro('permanent')}>
-              Comprados ({elementos.filter((e) => e.purchaseType === 'permanent').length})
+              Comprados ({elementos.filter((e) => e.tipoCompra === 'permanent').length})
             </button>
           </div>
           <div className="books-grid">
             {filtrados.map((item) => (
               <div key={item._id} className="library-item-wrapper">
                 <TarjetaLibro book={item.book} />
-                <span className={`library-item-badge ${item.purchaseType}`}>
-                  {item.purchaseType === 'permanent' ? 'Comprado' : 'Suscripción'}
+                <span className={`library-item-badge ${item.tipoCompra}`}>
+                  {item.tipoCompra === 'permanent' ? 'Comprado' : 'Suscripción'}
                 </span>
               </div>
             ))}

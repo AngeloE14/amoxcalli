@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { transaccionesAPI } from '../services/api';
+import { pagosAPI } from '../services/api';
 import { useToast } from '../context/ToastContext';
 
 export default function HistorialCompras() {
-  const [transacciones, setTransacciones] = useState([]);
+  const [pagos, setPagos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const { agregarToast } = useToast();
 
   useEffect(() => {
-    transaccionesAPI.getAll()
-      .then(({ data }) => setTransacciones(data))
+    pagosAPI.getAll()
+      .then(({ data }) => setPagos(data))
       .catch(() => agregarToast('No se pudo cargar tu historial de compras.', 'error'))
       .finally(() => setCargando(false));
   }, [agregarToast]);
@@ -22,7 +22,7 @@ export default function HistorialCompras() {
   return (
     <div className="history-page">
       <h1>Historial de Compras</h1>
-      {transacciones.length === 0 ? (
+      {pagos.length === 0 ? (
         <div className="empty-state">
           <div className="empty-icon">🛒</div>
           <p>No tienes compras registradas aún.</p>
@@ -30,20 +30,18 @@ export default function HistorialCompras() {
         </div>
       ) : (
         <div className="history-list">
-          {transacciones.map((transaccion) => (
-            <div key={transaccion._id} className="history-card">
-              <div className="history-card-icon">
-                {transaccion.type === 'subscription' ? '📋' : '📖'}
-              </div>
+          {pagos.map((pago) => (
+            <div key={pago._id} className="history-card">
+              <div className="history-card-icon">📖</div>
               <div className="history-card-info">
-                <h3>{transaccion.description}</h3>
-                <p>{transaccion.paymentMethod}</p>
+                <h3>{pago.libro?.titulo || 'Libro'}</h3>
+                <p>{pago.metodoPago}</p>
                 <span className="history-date">
-                  {new Date(transaccion.createdAt).toLocaleDateString('es', { year: 'numeric', month: 'long', day: 'numeric' })}
+                  {new Date(pago.fechaPago || pago.createdAt).toLocaleDateString('es', { year: 'numeric', month: 'long', day: 'numeric' })}
                 </span>
               </div>
               <div className="history-card-amount">
-                ${transaccion.amount.toFixed(2)} MXN
+                ${pago.monto.toFixed(2)} MXN
               </div>
             </div>
           ))}

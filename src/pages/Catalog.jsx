@@ -53,14 +53,14 @@ export default function Catalogo() {
       .then(({ data }) => setLibros(data))
       .catch(() => {
         let filtrados = [...LIBROS_MOCK];
-        if (busqueda) filtrados = filtrados.filter((l) => l.title.toLowerCase().includes(busqueda.toLowerCase()));
-        if (busquedaAutor) filtrados = filtrados.filter((l) => l.author.toLowerCase().includes(busquedaAutor.toLowerCase()));
-        if (generoActivo && generoActivo !== 'Todos') filtrados = filtrados.filter((l) => l.genre === generoActivo);
-        if (idioma) filtrados = filtrados.filter((l) => l.language === idioma);
-        if (orden === 'title') filtrados.sort((a, b) => a.title.localeCompare(b.title));
-        else if (orden === 'author') filtrados.sort((a, b) => a.author.localeCompare(b.author));
-        else if (orden === 'price_asc') filtrados.sort((a, b) => a.price - b.price);
-        else if (orden === 'price_desc') filtrados.sort((a, b) => b.price - a.price);
+        if (busqueda) filtrados = filtrados.filter((l) => l.titulo.toLowerCase().includes(busqueda.toLowerCase()));
+        if (busquedaAutor) filtrados = filtrados.filter((l) => l.autor.toLowerCase().includes(busquedaAutor.toLowerCase()));
+        if (generoActivo && generoActivo !== 'Todos') filtrados = filtrados.filter((l) => l.genero === generoActivo);
+        if (idioma) filtrados = filtrados.filter((l) => l.idioma === idioma);
+        if (orden === 'title') filtrados.sort((a, b) => a.titulo.localeCompare(b.titulo));
+        else if (orden === 'author') filtrados.sort((a, b) => a.autor.localeCompare(b.autor));
+        else if (orden === 'price_asc') filtrados.sort((a, b) => a.precio - b.precio);
+        else if (orden === 'price_desc') filtrados.sort((a, b) => b.precio - a.precio);
         setLibros(filtrados);
       })
       .finally(() => setCargando(false));

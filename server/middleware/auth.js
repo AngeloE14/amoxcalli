@@ -20,7 +20,7 @@ export const middlewareAuth = (req, res, next) => {
 };
 
 export const middlewareAdmin = (req, res, next) => {
-  if (req.user.role !== 'admin') {
+  if (req.user.rol !== 'admin') {
     return res.status(403).json({ message: 'Se requiere acceso de administrador' });
   }
   next();
@@ -28,7 +28,7 @@ export const middlewareAdmin = (req, res, next) => {
 
 export const generarToken = (usuario) => {
   return jwt.sign(
-    { id: usuario._id, email: usuario.email, name: usuario.name, role: usuario.role },
+    { id: usuario._id, correo: usuario.correo, nombre: usuario.nombre, rol: usuario.rol },
     SECRETO_JWT,
     { expiresIn: '7d' }
   );
