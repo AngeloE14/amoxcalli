@@ -10,12 +10,18 @@ export default function Planes() {
   const [seleccionado, setSeleccionado] = useState(null);
   const navegar = useNavigate();
 
-  const manejarSeleccion = (planId) => {
-    if (!usuario) return navegar('/login');
+  // Seleccionar plan: requiere estar logueado, guarda en backend y localStorage
+  const manejarSeleccion = async (planId) => {
+    if (!usuario) return navegar('/login'); // Si no está logueado, ir a login
     setSeleccionado(planId);
-    seleccionarPlan(planId);
-    agregarToast('¡Suscripción activada! (modo demo)');
-    navegar('/catalog');
+    try {
+      await seleccionarPlan(planId); // Guarda en MongoDB + localStorage
+      agregarToast('¡Suscripción activada!');
+      navegar('/catalog');
+    } catch {
+      agregarToast('No se pudo guardar el plan. Intenta de nuevo.', 'error');
+    }
+    setSeleccionado(null);
   };
 
   return (

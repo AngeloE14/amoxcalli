@@ -39,8 +39,9 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', middlewareAuth, middlewareAdmin, async (req, res) => {
   try {
-    const { titulo, autor, descripcion, portada, genero, idioma, precio, paginas, contenido } = req.body;
-    const libro = await Libro.create({ titulo, autor, descripcion, portada, genero, idioma, precio, paginas, contenido });
+    // Se incluye pdfUrl para que el admin pueda asignar la URL del PDF al crear un libro
+    const { titulo, autor, descripcion, portada, genero, idioma, precio, paginas, contenido, pdfUrl } = req.body;
+    const libro = await Libro.create({ titulo, autor, descripcion, portada, genero, idioma, precio, paginas, contenido, pdfUrl });
     res.status(201).json(libro);
   } catch (error) {
     res.status(500).json({ message: 'Error del servidor' });

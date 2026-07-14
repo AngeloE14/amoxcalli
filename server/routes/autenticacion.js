@@ -12,7 +12,8 @@ router.post('/register', async (req, res) => {
 
     const usuario = await Usuario.create({ nombre, correo, contraseña });
     const token = generarToken(usuario);
-    res.status(201).json({ token, user: { id: usuario._id, nombre: usuario.nombre, correo: usuario.correo, rol: usuario.rol } });
+    // Se incluye plan en la respuesta para que el frontend sepa qué plan tiene el usuario
+    res.status(201).json({ token, user: { id: usuario._id, nombre: usuario.nombre, correo: usuario.correo, rol: usuario.rol, plan: usuario.plan } });
   } catch (error) {
     res.status(500).json({ message: 'Error del servidor' });
   }
@@ -28,7 +29,8 @@ router.post('/login', async (req, res) => {
     if (!coincide) return res.status(400).json({ message: 'Credenciales incorrectas' });
 
     const token = generarToken(usuario);
-    res.json({ token, user: { id: usuario._id, nombre: usuario.nombre, correo: usuario.correo, rol: usuario.rol } });
+    // Lo mismo en login, para que al iniciar sesión el frontend reciba el plan
+    res.json({ token, user: { id: usuario._id, nombre: usuario.nombre, correo: usuario.correo, rol: usuario.rol, plan: usuario.plan } });
   } catch (error) {
     res.status(500).json({ message: 'Error del servidor' });
   }
@@ -46,7 +48,8 @@ router.get('/me', middlewareAuth, async (req, res) => {
 
 router.put('/profile', middlewareAuth, async (req, res) => {
   try {
-    const { nombre, correo } = req.body;
+    // Se acepta plan en el body para que el frontend pueda cambiar el plan del usuario
+    const { nombre, correo, plan } = req.body;
     const actualizaciones = {};
     if (nombre) actualizaciones.nombre = nombre;
     if (correo) {
@@ -54,6 +57,7 @@ router.put('/profile', middlewareAuth, async (req, res) => {
       if (existe) return res.status(400).json({ message: 'El correo ya está en uso' });
       actualizaciones.correo = correo;
     }
+    if (plan !== undefined) actualizaciones.plan = plan;
     const usuario = await Usuario.findByIdAndUpdate(req.user.id, actualizaciones, { new: true }).select('-contraseña');
     res.json(usuario);
   } catch (error) {

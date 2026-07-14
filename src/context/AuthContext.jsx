@@ -8,12 +8,15 @@ export function ProveedorAuth({ children }) {
   const [planActual, setPlanActual] = useState(null);
   const [cargando, setCargando] = useState(true);
 
+  // Al cargar la app, recuperar usuario y plan de localStorage si existe sesión
   useEffect(() => {
     const token = localStorage.getItem('token');
     const usuarioGuardado = localStorage.getItem('usuario');
-    const planGuardado = localStorage.getItem('planActual');
-    if (token && usuarioGuardado) setUsuario(JSON.parse(usuarioGuardado));
-    if (planGuardado) setPlanActual(planGuardado);
+    if (token && usuarioGuardado) {
+      const user = JSON.parse(usuarioGuardado);
+      setUsuario(user);
+      setPlanActual(user.plan || null); // El plan se guarda dentro del objeto usuario
+    }
     setCargando(false);
   }, []);
 
@@ -22,6 +25,7 @@ export function ProveedorAuth({ children }) {
     localStorage.setItem('token', data.token);
     localStorage.setItem('usuario', JSON.stringify(data.user));
     setUsuario(data.user);
+    setPlanActual(data.user.plan || null);
     return data;
   };
 
@@ -30,13 +34,13 @@ export function ProveedorAuth({ children }) {
     localStorage.setItem('token', data.token);
     localStorage.setItem('usuario', JSON.stringify(data.user));
     setUsuario(data.user);
+    setPlanActual(data.user.plan || null);
     return data;
   };
 
   const cerrarSesion = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
-    localStorage.removeItem('planActual');
     setUsuario(null);
     setPlanActual(null);
   };
@@ -45,10 +49,15 @@ export function ProveedorAuth({ children }) {
     const actualizado = { ...usuario, ...datos };
     localStorage.setItem('usuario', JSON.stringify(actualizado));
     setUsuario(actualizado);
+    if (datos.plan !== undefined) setPlanActual(datos.plan);
   };
 
-  const seleccionarPlan = (planId) => {
-    localStorage.setItem('planActual', planId);
+  // Cambiar plan: primero guardar en el backend, luego sincronizar localStorage
+  const seleccionarPlan = async (planId) => {
+    await authAPI.updateProfile({ plan: planId }); // PUT /api/auth/profile con el plan
+    const actualizado = { ...usuario, plan: planId };
+    localStorage.setItem('usuario', JSON.stringify(actualizado));
+    setUsuario(actualizado);
     setPlanActual(planId);
   };
 

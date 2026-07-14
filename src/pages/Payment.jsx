@@ -31,16 +31,26 @@ export default function Pago() {
   const manejarPago = async (e) => {
     e.preventDefault();
     setProcesando(true);
+    // Intentar registrar el pago en el backend (si falla, se ignora y se continúa como demo)
     try {
       await pagosAPI.create({ libro: id, monto: libro.precio, metodoPago: metodo, idTransaccion: 'TXN-' + Date.now() });
-      agregarToast('¡Compra realizada con éxito!');
-      navegar('/library');
     } catch {
-      agregarToast('¡Compra registrada! (modo demo)', 'exito');
-      navegar('/library');
-    } finally {
-      setProcesando(false);
+      // pago demo, continuar
     }
+    // Guardar el libro como "comprado" (permanent) en localStorage, solo si no ya está guardado
+    const biblio = JSON.parse(localStorage.getItem('biblioteca') || '[]');
+    if (!biblio.some((item) => item.libro?._id === id)) {
+      biblio.push({
+        _id: 'bib_' + Date.now(),
+        libro,
+        tipoCompra: 'permanent', // 'permanent' = comprado, 'subscription' = guardado
+        createdAt: new Date().toISOString(),
+      });
+      localStorage.setItem('biblioteca', JSON.stringify(biblio));
+    }
+    agregarToast('¡Compra realizada con éxito!');
+    navegar('/library');
+    setProcesando(false);
   };
 
   if (cargando) return (

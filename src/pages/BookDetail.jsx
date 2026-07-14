@@ -1,9 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { librosAPI, bibliotecaAPI } from '../services/api';
+import { librosAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import LIBROS_MOCK from '../data/mockBooks';
+
+// Helpers para leer/escribir la biblioteca en localStorage
+function obtenerBiblioteca() {
+  return JSON.parse(localStorage.getItem('biblioteca') || '[]');
+}
+
+function guardarBiblioteca(items) {
+  localStorage.setItem('biblioteca', JSON.stringify(items));
+}
 
 export default function DetalleLibro() {
   const { id } = useParams();
@@ -18,10 +27,6 @@ export default function DetalleLibro() {
       try {
         const { data: datosLibro } = await librosAPI.getById(id);
         setLibro(datosLibro);
-        if (usuario) {
-          const { data: datosBiblio } = await bibliotecaAPI.getAll();
-          setEnBiblioteca(datosBiblio.some((item) => item.libro?._id === id));
-        }
       } catch {
         const mock = LIBROS_MOCK.find((l) => l._id === id);
         if (mock) setLibro(mock);
@@ -31,21 +36,35 @@ export default function DetalleLibro() {
       }
     }
     cargar();
-  }, [id, usuario, agregarToast]);
+  }, [id, agregarToast]);
 
-  const manejarBiblioteca = async () => {
-    try {
-      if (enBiblioteca) {
-        await bibliotecaAPI.remove(id);
-        setEnBiblioteca(false);
-        agregarToast('Libro eliminado de tu biblioteca');
-      } else {
-        await bibliotecaAPI.add(id, 'subscription');
-        setEnBiblioteca(true);
-        agregarToast('Libro guardado en tu biblioteca');
-      }
-    } catch (err) {
-      agregarToast(err.response?.data?.message || 'No se pudo modificar tu biblioteca. Intenta de nuevo.', 'error');
+  // Verificar si el libro ya está guardado en la biblioteca del usuario
+  useEffect(() => {
+    if (libro) {
+      const biblio = obtenerBiblioteca();
+      setEnBiblioteca(biblio.some((item) => item.libro?._id === id));
+    }
+  }, [id, libro]);
+
+  // Agregar o quitar libro de la biblioteca (localStorage)
+  const manejarBiblioteca = () => {
+    const biblio = obtenerBiblioteca();
+    if (enBiblioteca) {
+      // Si ya está guardado, lo elimina
+      guardarBiblioteca(biblio.filter((item) => item.libro?._id !== id));
+      setEnBiblioteca(false);
+      agregarToast('Libro eliminado de tu biblioteca');
+    } else {
+      // Si no está, lo agrega con tipoCompra 'subscription' (guardado, no comprado)
+      biblio.push({
+        _id: 'bib_' + Date.now(), // ID temporal para key de React
+        libro,
+        tipoCompra: 'subscription',
+        createdAt: new Date().toISOString(),
+      });
+      guardarBiblioteca(biblio);
+      setEnBiblioteca(true);
+      agregarToast('Libro guardado en tu biblioteca');
     }
   };
 
@@ -88,7 +107,17 @@ export default function DetalleLibro() {
           <p className="book-detail-desc">{libro.descripcion}</p>
           <div className="book-detail-actions">
             {usuario && (
-              <button onClick={manejarBiblioteca} className={`btn ${enBiblioteca ? 'btn-outline' : 'btn-secondary'}`}>
+              <Link to={`/books/${id}/read`} className="btn btn-primary">
+                Leer libro
+              </Link>
+            )}
+            {usuario && !enBiblioteca && (
+              <Link to={`/payment/${id}`} className="btn btn-secondary">
+                Comprar libro
+              </Link>
+            )}
+            {usuario && (
+              <button onClick={manejarBiblioteca} className={`btn ${enBiblioteca ? 'btn-outline' : 'btn-outline'}`}>
                 {enBiblioteca ? '✓ En tu biblioteca' : '+ Guardar'}
               </button>
             )}

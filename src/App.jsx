@@ -14,6 +14,7 @@ import Perfil from './pages/Profile';
 import AdminLibros from './pages/AdminBooks';
 import Pago from './pages/Payment';
 import HistorialCompras from './pages/PurchaseHistory';
+import LectorPdf from './pages/PdfReader';
 import NoEncontrado from './pages/NotFound';
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
               <Route path="/plans" element={<Planes />} />
               <Route path="/catalog" element={<Catalogo />} />
               <Route path="/books/:id" element={<DetalleLibro />} />
+              <Route path="/books/:id/read" element={<RutaProtegida><LectorPdf /></RutaProtegida>} />
               <Route path="/payment/:id" element={<RutaProtegida><Pago /></RutaProtegida>} />
               <Route path="/library" element={<RutaProtegida><MiBiblioteca /></RutaProtegida>} />
               <Route path="/profile" element={<RutaProtegida><Perfil /></RutaProtegida>} />

@@ -13,7 +13,7 @@ export default function AdminLibros() {
   const [editandoId, setEditandoId] = useState(null);
   const [formulario, setFormulario] = useState({
     titulo: '', autor: '', descripcion: '', portada: '', genero: 'Novela',
-    idioma: 'Español', precio: '179.99', paginas: '0', contenido: '',
+    idioma: 'Español', precio: '179.99', paginas: '0', contenido: '', pdfUrl: '',
   });
 
   useEffect(() => { cargarLibros(); }, []);
@@ -29,7 +29,7 @@ export default function AdminLibros() {
   const limpiarFormulario = () => {
     setFormulario({
       titulo: '', autor: '', descripcion: '', portada: '', genero: 'Novela',
-      idioma: 'Español', precio: '179.99', paginas: '0', contenido: '',
+      idioma: 'Español', precio: '179.99', paginas: '0', contenido: '', pdfUrl: '',
     });
     setEditandoId(null);
     setMostrarFormulario(false);
@@ -64,6 +64,7 @@ export default function AdminLibros() {
       titulo: libro.titulo, autor: libro.autor, descripcion: libro.descripcion,
       portada: libro.portada || '', genero: libro.genero, idioma: libro.idioma || 'Español',
       precio: String(libro.precio || 179.99), paginas: String(libro.paginas || 0), contenido: libro.contenido || '',
+      pdfUrl: libro.pdfUrl || '',
     });
     setEditandoId(libro._id);
     setMostrarFormulario(true);
@@ -123,6 +124,10 @@ export default function AdminLibros() {
             <div className="input-group full-width">
               <label>URL de portada</label>
               <input type="text" value={formulario.portada} onChange={(e) => setFormulario({ ...formulario, portada: e.target.value })} />
+            </div>
+            <div className="input-group full-width">
+              <label>URL del PDF</label>
+              <input type="text" value={formulario.pdfUrl} onChange={(e) => setFormulario({ ...formulario, pdfUrl: e.target.value })} placeholder="https://ejemplo.com/libro.pdf" />
             </div>
             <div className="input-group full-width">
               <label>Descripción</label>
