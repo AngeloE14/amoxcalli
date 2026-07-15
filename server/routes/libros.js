@@ -4,6 +4,7 @@ import { middlewareAuth, middlewareAdmin } from '../middleware/auth.js';
 
 const router = Router();
 
+// GET / — Listar libros con filtros opcionales (genre, search, author, language, sort)
 router.get('/', async (req, res) => {
   try {
     const { genre, search, author, language, sort } = req.query;
@@ -37,6 +38,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// Proxy: sirve el PDF desde la URL externa para evitar problemas de CORS en el navegador
 router.get('/:id/pdf', async (req, res) => {
   try {
     const libro = await Libro.findById(req.params.id);

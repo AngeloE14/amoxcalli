@@ -14,6 +14,7 @@ const OPCIONES_ORDEN = [
 ];
 const IDIOMAS = ['', 'Español', 'Inglés'];
 
+// Skeleton que se muestra mientras carga el catálogo
 function EsqueletoCarga() {
   return (
     <div className="books-grid">
@@ -40,6 +41,7 @@ export default function Catalogo() {
   const [idioma, setIdioma] = useState('');
   const [orden, setOrden] = useState('');
 
+  // Cada vez que cambia un filtro se vuelve a consultar la API
   useEffect(() => {
     setCargando(true);
     const parametros = {};

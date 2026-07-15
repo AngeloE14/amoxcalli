@@ -4,6 +4,7 @@ import { middlewareAuth } from '../middleware/auth.js';
 
 const router = Router();
 
+// GET / — Historial de pagos del usuario autenticado
 router.get('/', middlewareAuth, async (req, res) => {
   try {
     const pagos = await Pago.find({ usuario: req.user.id })

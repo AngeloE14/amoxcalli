@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+// Modelo de libros: contiene toda la info necesaria para catálogo y lector
 const bookSchema = new mongoose.Schema({
   titulo: { type: String, required: true },
   autor: { type: String, required: true },

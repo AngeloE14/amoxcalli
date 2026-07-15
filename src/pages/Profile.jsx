@@ -23,7 +23,7 @@ export default function Perfil() {
   const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
   const [cargandoEliminar, setCargandoEliminar] = useState(false);
 
-  // Un solo formulario que maneja correo y contraseña por separado
+  // Actualizar perfil: puede cambiar correo, contraseña, o ambos
   const manejarEnvio = async (e) => {
     e.preventDefault();
     setCargando(true);

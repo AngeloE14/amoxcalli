@@ -31,6 +31,7 @@ function App() {
               <Route path="/plans" element={<Planes />} />
               <Route path="/catalog" element={<Catalogo />} />
               <Route path="/books/:id" element={<DetalleLibro />} />
+              {/* Rutas protegidas: solo accesibles si el usuario está logueado */}
               <Route path="/books/:id/read" element={<RutaProtegida><LectorPdf /></RutaProtegida>} />
               <Route path="/payment/:id" element={<RutaProtegida><Pago /></RutaProtegida>} />
               <Route path="/library" element={<RutaProtegida><MiBiblioteca /></RutaProtegida>} />

@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+// Cliente axios base: en producción apunta al backend, en dev usa el proxy de Vite
 const clienteAPI = axios.create({ baseURL: '/api' });
 
+// Agregar token JWT a cada request si existe sesión
 clienteAPI.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) config.headers.Authorization = `Bearer ${token}`;

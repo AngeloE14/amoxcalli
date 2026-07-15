@@ -22,6 +22,7 @@ export default function DetalleLibro() {
   const [cargando, setCargando] = useState(true);
   const [enBiblioteca, setEnBiblioteca] = useState(false);
 
+  // Cargar datos del libro desde la API
   useEffect(() => {
     async function cargar() {
       try {

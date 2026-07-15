@@ -11,6 +11,7 @@ export default function AdminLibros() {
   const [cargando, setCargando] = useState(true);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [editandoId, setEditandoId] = useState(null);
+  // Formulario para crear/editar libros, incluye pdfUrl para el lector
   const [formulario, setFormulario] = useState({
     titulo: '', autor: '', descripcion: '', portada: '', genero: 'Novela',
     idioma: 'Español', precio: '179.99', paginas: '0', contenido: '', pdfUrl: '',

@@ -10,6 +10,7 @@ export default function Navbar() {
   const estaActiva = (ruta) => ubicacion.pathname === ruta;
 
   return (
+    // Menú responsive: en móvil se oculta y se muestra con el botón hamburguesa
     <nav className="navbar">
       <div className="navbar-inner">
         <Link to="/" className="navbar-brand">

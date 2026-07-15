@@ -4,6 +4,7 @@ import { generarToken, middlewareAuth } from '../middleware/auth.js';
 
 const router = Router();
 
+// POST /register — Crear cuenta nueva y devolver token
 router.post('/register', async (req, res) => {
   try {
     const { nombre, correo, contraseña } = req.body;
@@ -19,6 +20,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
+// POST /login — Verificar credenciales y devolver token
 router.post('/login', async (req, res) => {
   try {
     const { correo, contraseña } = req.body;

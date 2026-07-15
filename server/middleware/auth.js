@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 
 const SECRETO_JWT = process.env.JWT_SECRET || 'amoxcalli_secret_key_2024';
 
+// Verifica que el request tenga un token JWT válido
 export const middlewareAuth = (req, res, next) => {
   const cabecera = req.headers.authorization;
   if (!cabecera || !cabecera.startsWith('Bearer ')) {
@@ -19,6 +20,7 @@ export const middlewareAuth = (req, res, next) => {
   }
 };
 
+// Solo permite acceso si el usuario tiene rol 'admin'
 export const middlewareAdmin = (req, res, next) => {
   if (req.user.rol !== 'admin') {
     return res.status(403).json({ message: 'Se requiere acceso de administrador' });

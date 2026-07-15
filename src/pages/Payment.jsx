@@ -28,6 +28,7 @@ export default function Pago() {
       .finally(() => setCargando(false));
   }, [id, agregarToast]);
 
+  // Procesar pago simulado y guardar el libro como "comprado" en localStorage
   const manejarPago = async (e) => {
     e.preventDefault();
     setProcesando(true);

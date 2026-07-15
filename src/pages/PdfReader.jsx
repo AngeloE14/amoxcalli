@@ -6,6 +6,7 @@ import 'react-pdf/dist/Page/TextLayer.css';
 import { librosAPI } from '../services/api';
 import LIBROS_MOCK from '../data/mockBooks';
 
+// Worker de pdf.js para procesar los PDFs en un hilo separado
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 export default function LectorPdf() {
@@ -17,8 +18,9 @@ export default function LectorPdf() {
   const [cargando, setCargando] = useState(true);
   const [errorPdf, setErrorPdf] = useState(null);
   const scrollRef = useRef(null);
-  const pageRefs = useRef({});
+  const pageRefs = useRef({}); //_refs a cada contenedor de página para el observer
 
+  // Cargar info del libro, si la API falla se usa mock como respaldo
   useEffect(() => {
     async function cargar() {
       try {
@@ -58,12 +60,13 @@ export default function LectorPdf() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Observer para detectar qué página está visible al hacer scroll
+  // Detectar qué página está visible para actualizar el contador
   useEffect(() => {
     if (!numPages) return;
     const container = scrollRef.current;
     if (!container) return;
 
+    // Se dispara cuando una página entra/sale del 60% central del contenedor
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {

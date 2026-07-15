@@ -16,6 +16,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Conexión a MongoDB Atlas (la URI está en .env)
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/amoxcalli')
   .then(() => console.log('MongoDB conectado'))
   .catch((error) => console.error('Error al conectar con MongoDB:', error));

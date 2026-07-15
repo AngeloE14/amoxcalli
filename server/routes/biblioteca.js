@@ -4,7 +4,11 @@ import { middlewareAuth } from '../middleware/auth.js';
 
 const router = Router();
 
-router.get('/', middlewareAuth, async (req, res) => {
+// Todas las rutas de biblioteca requieren autenticación
+router.use(middlewareAuth);
+
+// GET / — Devolver todos los libros guardados del usuario
+router.get('/', async (req, res) => {
   try {
     const elementos = await ElementoBiblioteca.find({ usuario: req.user.id })
       .populate('libro')
@@ -15,7 +19,7 @@ router.get('/', middlewareAuth, async (req, res) => {
   }
 });
 
-router.post('/', middlewareAuth, async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { bookId, tipoCompra } = req.body;
     const existente = await ElementoBiblioteca.findOne({ usuario: req.user.id, libro: bookId });
@@ -33,7 +37,7 @@ router.post('/', middlewareAuth, async (req, res) => {
   }
 });
 
-router.delete('/:bookId', middlewareAuth, async (req, res) => {
+router.delete('/:bookId', async (req, res) => {
   try {
     await ElementoBiblioteca.findOneAndDelete({ usuario: req.user.id, libro: req.params.bookId });
     res.json({ message: 'Eliminado de la biblioteca' });
