@@ -1429,9 +1429,28 @@ a:hover {
   flex-wrap: wrap;
 }
 
+.pdf-reader-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.pdf-reader-cover {
+  width: 42px;
+  height: 58px;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
 .pdf-reader-info h1 {
   font-size: 1.3rem;
   margin-bottom: 0.1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .pdf-reader-info p {
@@ -1473,27 +1492,31 @@ a:hover {
 
 .pdf-reader-content {
   display: flex;
-  justify-content: center;
-  overflow: auto;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  overflow-y: auto;
+  max-height: 75vh;
   background: var(--bg-card);
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  padding: 1rem;
-  min-height: 600px;
+  padding: 1.5rem;
+  scroll-behavior: smooth;
 }
 
-.pdf-reader-content .react-pdf__Page {
+.pdf-page-wrapper {
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pdf-page-wrapper .react-pdf__Page {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.pdf-reader-content canvas {
+.pdf-page-wrapper canvas {
   max-width: 100%;
   height: auto !important;
-}
-
-.pdf-reader-content .react-pdf__Page__textContent,
-.pdf-reader-content .react-pdf__Page__annotations {
-  display: none;
 }
 
 /* ===== LIBRARY ===== */

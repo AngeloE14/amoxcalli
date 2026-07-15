@@ -37,6 +37,30 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+router.get('/:id/pdf', async (req, res) => {
+  try {
+    const libro = await Libro.findById(req.params.id);
+    if (!libro) return res.status(404).json({ message: 'Libro no encontrado' });
+    if (!libro.pdfUrl) return res.status(404).json({ message: 'PDF no disponible' });
+
+    const respuesta = await fetch(libro.pdfUrl);
+    if (!respuesta.ok) return res.status(502).json({ message: 'No se pudo obtener el PDF desde la fuente externa' });
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `inline; filename="${libro.titulo}.pdf"`);
+
+    const reader = respuesta.body.getReader();
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      res.write(value);
+    }
+    res.end();
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener el PDF' });
+  }
+});
+
 router.post('/', middlewareAuth, middlewareAdmin, async (req, res) => {
   try {
     // Se incluye pdfUrl para que el admin pueda asignar la URL del PDF al crear un libro
