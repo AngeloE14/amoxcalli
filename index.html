@@ -1,5 +1,11 @@
 <!doctype html>
-<html lang="en">
+<!-- ============================================================ -->
+<!-- index.html — Punto de entrada HTML de la aplicación SPA       -->
+<!-- ============================================================ -->
+<!-- SPA = Single Page Application: React se encarga de renderizar -->
+<!-- todo el contenido dentro del div#root usando JavaScript.      -->
+<!-- Vite inyecta automáticamente los scripts y estilos aquí.     -->
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -7,7 +13,9 @@
     <title>Amoxcalli - Plataforma de Suscripción de Libros</title>
   </head>
   <body>
+    <!-- Contenedor raíz donde React monta toda la aplicación -->
     <div id="root"></div>
+    <!-- main.jsx es el archivo que inicializa React y renderiza <App /> -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

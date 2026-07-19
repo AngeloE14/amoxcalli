@@ -1,19 +1,27 @@
+// ============================================================
+// src/pages/Register.jsx — Página de Registro
+// ============================================================
+// Formulario donde un usuario nuevo crea su cuenta.
+// Solicita nombre, email y contraseña (mínimo 8 caracteres).
+// Al registrarse, redirige a la página de selección de plan.
+
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
 export default function Register() {
-  const [nombre, setNombre] = useState('');
-  const [correo, setCorreo] = useState('');
-  const [contrasena, setContrasena] = useState('');
-  const [mostrarContrasena, setMostrarContrasena] = useState(false);
-  const [error, setError] = useState('');
-  const [cargando, setCargando] = useState(false);
-  const { registrarUsuario } = useAuth();
-  const { agregarToast } = useToast();
-  const navigate = useNavigate();
+  const [nombre, setNombre] = useState('');                 // Nombre ingresado
+  const [correo, setCorreo] = useState('');                // Email ingresado
+  const [contrasena, setContrasena] = useState('');        // Contraseña ingresada
+  const [mostrarContrasena, setMostrarContrasena] = useState(false); // Toggle ver/ocultar
+  const [error, setError] = useState('');                   // Mensaje de error
+  const [cargando, setCargando] = useState(false);          // Estado de carga
+  const { registrarUsuario } = useAuth();                   // Función del contexto
+  const { agregarToast } = useToast();                     // Notificaciones
+  const navigate = useNavigate();                           // Navegación programática
 
+  // Manejar el envío del formulario de registro
   const manejarEnvio = async (e) => {
     e.preventDefault();
     setError('');
@@ -21,7 +29,7 @@ export default function Register() {
     try {
       await registrarUsuario(nombre, correo, contrasena);
       agregarToast('¡Cuenta creada con éxito!');
-      navigate('/plans');
+      navigate('/plans'); // Redirigir a selección de plan después del registro
     } catch (err) {
       setError(err.response?.data?.message || 'No se pudo crear la cuenta. El email ya podría estar en uso.');
     } finally {
@@ -32,6 +40,7 @@ export default function Register() {
   return (
     <div className="auth-page">
       <form onSubmit={manejarEnvio} className="auth-form">
+        {/* Encabezado con icono de usuario y formulario */}
         <div className="auth-form-header">
           <div className="auth-form-icon">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -45,14 +54,17 @@ export default function Register() {
           <p>Únete a Amoxcalli y comienza a leer</p>
         </div>
         {error && <div className="error-message">{error}</div>}
+        {/* Campo de nombre */}
         <div className="input-group">
           <label htmlFor="nombre">Nombre</label>
           <input id="nombre" type="text" placeholder="Tu nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
         </div>
+        {/* Campo de email */}
         <div className="input-group">
           <label htmlFor="correo-reg">Email</label>
           <input id="correo-reg" type="email" placeholder="tu@email.com" value={correo} onChange={(e) => setCorreo(e.target.value)} required />
         </div>
+        {/* Campo de contraseña con validación de mínimo 8 caracteres */}
         <div className="input-group">
           <label htmlFor="contrasena-reg">Contraseña</label>
           <div className="password-wrapper">
@@ -74,9 +86,11 @@ export default function Register() {
             </button>
           </div>
         </div>
+        {/* Botón de registro */}
         <button type="submit" className="btn btn-primary" disabled={cargando}>
           {cargando ? 'Creando cuenta...' : 'Crear Cuenta'}
         </button>
+        {/* Enlace para login si ya tiene cuenta */}
         <p className="auth-link">¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link></p>
       </form>
     </div>

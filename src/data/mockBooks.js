@@ -1,3 +1,11 @@
+// ============================================================
+// src/data/mockBooks.js — Datos de prueba (Mock Data)
+// ============================================================
+// Este archivo contiene datos de ejemplo que se usan como respaldo
+// cuando el backend no está disponible. Si la API falla, la
+// aplicación muestra estos libros y planes para que funcione en "modo demo".
+
+// 10 libros famosos con sus portadas de Unsplash y precios en MXN
 const MOCK_BOOKS = [
   {
     _id: 'b1',
@@ -101,24 +109,25 @@ const MOCK_BOOKS = [
   },
 ];
 
+// Dos planes de suscripción de ejemplo
 const PLANS = [
   {
     _id: 'standard',
     nombre: 'Estándar',
     precio: 79.99,
-    duracionDias: 90,
+    duracionDias: 90, // 3 meses
     descripcion: 'Acceso a hasta 5 libros por 3 meses. Sin reseñas, sin guardado ni compras individuales.',
     features: ['Hasta 5 libros por 3 meses', 'Lector básico', 'Solo lectura'],
-    restricted: true,
+    restricted: true, // Marcado como con restricciones
   },
   {
     _id: 'premium',
     nombre: 'Premium',
     precio: 149.99,
-    duracionDias: 90,
+    duracionDias: 90, // 3 meses
     descripcion: 'Acceso ilimitado a todo el catálogo por 3 meses. Reseñas, guardado y compras.',
     features: ['Acceso ilimitado', 'Reseñas y opiniones', 'Guardar en biblioteca', 'Compras individuales', 'Progreso de lectura'],
-    restricted: false,
+    restricted: false, // Sin restricciones
   },
 ];
 
