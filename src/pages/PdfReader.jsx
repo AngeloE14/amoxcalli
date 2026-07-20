@@ -195,7 +195,7 @@ export default function LectorPdf() {
       {/* Contenido del PDF: todas las páginas renderizadas en scroll vertical */}
       <div className="pdf-reader-content" ref={scrollRef}>
         <Document
-          file={`/api/books/${id}/pdf`} {/* URL del proxy del backend */}
+          file={`/api/books/${id}/pdf`}
           onLoadSuccess={onDocumentLoadSuccess}
           onLoadError={onDocumentLoadError}
           loading={<div className="read-loading"><div className="spinner" /><p>Cargando PDF...</p></div>}
