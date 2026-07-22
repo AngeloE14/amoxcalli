@@ -1,11 +1,3 @@
-// ============================================================
-// src/pages/PdfReader.jsx — Lector de PDF
-// ============================================================
-// Lector completo de PDF integrado en el navegador.
-// Carga el PDF a través del proxy del backend (para evitar CORS).
-// Incluye: zoom (+/-), navegación por páginas, atajos de teclado,
-// y detección de página visible con IntersectionObserver.
-
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Document, Page, pdfjs } from 'react-pdf';
@@ -14,24 +6,19 @@ import 'react-pdf/dist/Page/TextLayer.css';
 import { librosAPI } from '../services/api';
 import LIBROS_MOCK from '../data/mockBooks';
 
-// ============================================================
-// Configurar el worker de pdf.js: procesa los PDFs en un hilo
-// separado (Web Worker) para no bloquear la interfaz
-// ============================================================
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 export default function LectorPdf() {
-  const { id } = useParams();           // ID del libro desde la URL
+  const { id } = useParams();
   const [libro, setLibro] = useState(null);
-  const [numPages, setNumPages] = useState(null);  // Total de páginas del PDF
-  const [pageNumber, setPageNumber] = useState(1); // Página actual visible
-  const [scale, setScale] = useState(1.2);          // Nivel de zoom (1.0 = 100%)
+  const [numPages, setNumPages] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [scale, setScale] = useState(1.2);
   const [cargando, setCargando] = useState(true);
   const [errorPdf, setErrorPdf] = useState(null);
-  const scrollRef = useRef(null);         // Ref al contenedor de scroll
-  const pageRefs = useRef({});            // Refs a cada contenedor de página para IntersectionObserver
+  const scrollRef = useRef(null);
+  const pageRefs = useRef({});
 
-  // Cargar info del libro desde la API, fallback a mock
   useEffect(() => {
     async function cargar() {
       try {
@@ -48,20 +35,17 @@ export default function LectorPdf() {
     cargar();
   }, [id]);
 
-  // ============================================================
-  // Atajos de teclado para el lector:
-  // +/- = cambiar zoom, ArrowUp/Down = desplazar página
-  // ============================================================
+  // Atajos de teclado: +/- para zoom, flechas para desplazar
   useEffect(() => {
     function handleKeyDown(e) {
       const container = scrollRef.current;
       if (!container) return;
       if (e.key === '+' || e.key === '=') {
         e.preventDefault();
-        setScale((s) => Math.min(s + 0.2, 3)); // Zoom máximo 300%
+        setScale((s) => Math.min(s + 0.2, 3));
       } else if (e.key === '-') {
         e.preventDefault();
-        setScale((s) => Math.max(s - 0.2, 0.6)); // Zoom mínimo 60%
+        setScale((s) => Math.max(s - 0.2, 0.6));
       } else if (e.key === 'ArrowDown') {
         e.preventDefault();
         container.scrollBy({ top: 400, behavior: 'smooth' });
@@ -74,16 +58,12 @@ export default function LectorPdf() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // ============================================================
-  // IntersectionObserver: detecta qué página está visible
-  // para actualizar el contador de página actual
-  // ============================================================
+  // IntersectionObserver para detectar la página visible
   useEffect(() => {
     if (!numPages) return;
     const container = scrollRef.current;
     if (!container) return;
 
-    // Se dispara cuando una página entra/sale del 60% central del contenedor
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -96,38 +76,32 @@ export default function LectorPdf() {
       { root: container, rootMargin: '-40% 0px -40% 0px', threshold: 0 }
     );
 
-    // Observar todas las páginas renderizadas
     Object.values(pageRefs.current).forEach((el) => {
       if (el) observer.observe(el);
     });
 
     return () => observer.disconnect();
-  }, [numPages, scale]); // Re-crear observer cuando cambia el zoom o el número de páginas
+  }, [numPages, scale]);
 
-  // Callback: se ejecuta cuando el PDF se carga exitosamente
   const onDocumentLoadSuccess = ({ numPages: total }) => {
     setNumPages(total);
     setPageNumber(1);
   };
 
-  // Callback: se ejecuta si hay error al cargar el PDF
   const onDocumentLoadError = (err) => {
     setErrorPdf('Error al cargar el PDF. Verifica que la URL sea válida y accesible.');
     console.error('PDF load error:', err);
   };
 
-  // Desplazarse suavemente a una página específica
   const scrollToPage = useCallback((page) => {
     const el = pageRefs.current[page];
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, []);
 
-  // Registrar un ref para cada contenedor de página
   const registerPageRef = useCallback((page, el) => {
     if (el) pageRefs.current[page] = el;
   }, []);
 
-  // Estado de carga
   if (cargando) {
     return (
       <div className="read-loading">
@@ -137,7 +111,6 @@ export default function LectorPdf() {
     );
   }
 
-  // Error al cargar
   if (errorPdf || !libro) {
     return (
       <div className="read-error">
@@ -148,7 +121,6 @@ export default function LectorPdf() {
     );
   }
 
-  // Sin PDF disponible
   if (!libro.pdfUrl) {
     return (
       <div className="read-error">
@@ -161,7 +133,6 @@ export default function LectorPdf() {
 
   return (
     <div className="pdf-reader">
-      {/* Barra superior: enlace, info del libro y controles de zoom */}
       <div className="pdf-reader-header">
         <Link to={`/books/${id}`} className="read-back">← Volver al detalle</Link>
         <div className="pdf-reader-info">
@@ -171,7 +142,6 @@ export default function LectorPdf() {
             <p>{libro.autor}</p>
           </div>
         </div>
-        {/* Controles de zoom: - / nivel actual / + */}
         <div className="pdf-reader-controls">
           <button onClick={() => setScale((s) => Math.max(s - 0.2, 0.6))} className="btn btn-outline btn-sm" title="Reducir (−)">−</button>
           <span className="pdf-zoom-level">{Math.round(scale * 100)}%</span>
@@ -179,7 +149,6 @@ export default function LectorPdf() {
         </div>
       </div>
 
-      {/* Navegación por páginas: Anterior / Página actual / Siguiente */}
       <div className="pdf-reader-nav">
         <button onClick={() => scrollToPage(Math.max(pageNumber - 1, 1))} disabled={pageNumber <= 1} className="btn btn-outline btn-sm">
           ← Anterior
@@ -192,7 +161,6 @@ export default function LectorPdf() {
         </button>
       </div>
 
-      {/* Contenido del PDF: todas las páginas renderizadas en scroll vertical */}
       <div className="pdf-reader-content" ref={scrollRef}>
         <Document
           file={`/api/books/${id}/pdf`}

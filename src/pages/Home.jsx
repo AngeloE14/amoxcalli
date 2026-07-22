@@ -1,12 +1,3 @@
-// ============================================================
-// src/pages/Home.jsx — Página Principal (Landing Page)
-// ============================================================
-// Es la primera página que ve el usuario. Contiene:
-// 1. Hero: sección principal con título y botones de acción
-// 2. Cómo funciona: pasos para usar la plataforma (3 pasos)
-// 3. Libros destacados: muestra los 4 libros más recientes
-// 4. Características: sección informativa sobre las funcionalidades
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -18,20 +9,16 @@ export default function Inicio() {
   const { usuario } = useAuth();
   const [destacados, setDestacados] = useState([]);
 
-  // Cargar los 4 libros más recientes de la API al montar el componente
-  // Si la API falla, usar los datos mock como respaldo
   useEffect(() => {
     librosAPI.getAll({ sort: 'newest' })
-      .then(({ data }) => setDestacados(data.slice(0, 4))) // Solo los 4 más recientes
+      .then(({ data }) => setDestacados(data.slice(0, 4)))
       .catch(() => setDestacados(LIBROS_MOCK.slice(0, 4)));
   }, []);
 
   return (
     <div className="home">
-      {/* ========== SECCIÓN HERO ========== */}
-      {/* Sección principal con fondo animado, título y botones de acción */}
+      {/* Hero */}
       <section className="hero-section">
-        {/* Formas decorativas animadas de fondo */}
         <div className="hero-bg-shapes">
           <div className="shape shape-1" />
           <div className="shape shape-2" />
@@ -46,8 +33,6 @@ export default function Inicio() {
             Suscribete o compra individualmente. Lee cuando quieras, donde quieras.
           </p>
           <div className="hero-actions">
-            {/* Si está logueado, mostrar botón de explorar catálogo */}
-            {/* Si NO está logueado, mostrar botones de registro y catálogo */}
             {usuario ? (
               <Link to="/catalog" className="btn btn-primary btn-lg">Explorar Catalogo</Link>
             ) : (
@@ -60,8 +45,7 @@ export default function Inicio() {
         </div>
       </section>
 
-      {/* ========== SECCIÓN CÓMO FUNCIONA ========== */}
-      {/* 3 pasos explicativos: Crear cuenta → Elegir plan → Leer */}
+      {/* Cómo funciona */}
       <section className="home-how">
         <h2>Como funciona</h2>
         <div className="home-how-grid">
@@ -85,8 +69,7 @@ export default function Inicio() {
         </div>
       </section>
 
-      {/* ========== SECCIÓN LIBROS DESTACADOS ========== */}
-      {/* Muestra los 4 libros más recientes (con fallback a datos mock) */}
+      {/* Libros destacados */}
       {destacados.length > 0 && (
         <section className="home-featured">
           <div className="home-featured-header">
@@ -101,10 +84,8 @@ export default function Inicio() {
         </section>
       )}
 
-      {/* ========== SECCIÓN CARACTERÍSTICAS ========== */}
-      {/* Dos filas que explican: Biblioteca Personal y Lector Digital */}
+      {/* Características */}
       <section className="home-features">
-        {/* Fila 1: Biblioteca Personal */}
         <div className="home-feature-row">
           <div className="home-feature-text">
             <span className="home-feature-tag">Biblioteca personal</span>
@@ -117,7 +98,6 @@ export default function Inicio() {
             </ul>
           </div>
           <div className="home-feature-visual">
-            {/* Tarjetas decorativas que representan géneros */}
             <div className="home-feature-card-stack">
               <div className="home-feature-card-item c1">Novela</div>
               <div className="home-feature-card-item c2">Ciencia Ficcion</div>
@@ -126,7 +106,6 @@ export default function Inicio() {
           </div>
         </div>
 
-        {/* Fila 2: Lector Digital */}
         <div className="home-feature-row reverse">
           <div className="home-feature-text">
             <span className="home-feature-tag">Lector digital</span>
@@ -139,7 +118,6 @@ export default function Inicio() {
             </ul>
           </div>
           <div className="home-feature-visual">
-            {/* Demo visual de un lector con barra de progreso */}
             <div className="home-feature-reader-demo">
               <div className="home-reader-bar">
                 <div className="home-reader-fill" />

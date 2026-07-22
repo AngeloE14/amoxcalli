@@ -1,12 +1,3 @@
-// ============================================================
-// src/pages/AdminBooks.jsx — Panel de Administración de Libros
-// ============================================================
-// Panel exclusivo para administradores. Permite:
-// 1. Crear libros nuevos con todos sus campos (incluido URL del PDF)
-// 2. Editar libros existentes
-// 3. Eliminar libros
-// 4. Ver tabla con todos los libros del catálogo
-
 import { useState, useEffect } from 'react';
 import { librosAPI } from '../services/api';
 import { useToast } from '../context/ToastContext';
@@ -16,29 +7,25 @@ const GENEROS = ['Novela', 'Ciencia Ficción', 'Fantasía', 'Romance', 'Clásico
 
 export default function AdminLibros() {
   const { agregarToast } = useToast();
-  const [libros, setLibros] = useState([]);           // Lista de todos los libros
+  const [libros, setLibros] = useState([]);
   const [cargando, setCargando] = useState(true);
-  const [mostrarFormulario, setMostrarFormulario] = useState(false); // Toggle formulario
-  const [editandoId, setEditandoId] = useState(null);  // ID del libro que se está editando (null = creando nuevo)
-  // Formulario para crear/editar libros
+  const [mostrarFormulario, setMostrarFormulario] = useState(false);
+  const [editandoId, setEditandoId] = useState(null);
   const [formulario, setFormulario] = useState({
     titulo: '', autor: '', descripcion: '', portada: '', genero: 'Novela',
     idioma: 'Español', precio: '179.99', paginas: '0', contenido: '', pdfUrl: '',
   });
 
-  // Cargar libros al montar el componente
   useEffect(() => { cargarLibros(); }, []);
 
-  // Consultar todos los libros de la API
   const cargarLibros = () => {
     setCargando(true);
     librosAPI.getAll()
       .then(({ data }) => setLibros(data))
-      .catch(() => setLibros(LIBROS_MOCK)) // Fallback a datos mock
+      .catch(() => setLibros(LIBROS_MOCK))
       .finally(() => setCargando(false));
   };
 
-  // Limpiar el formulario y cerrar el modo edición
   const limpiarFormulario = () => {
     setFormulario({
       titulo: '', autor: '', descripcion: '', portada: '', genero: 'Novela',
@@ -48,12 +35,8 @@ export default function AdminLibros() {
     setMostrarFormulario(false);
   };
 
-  // ============================================================
-  // Enviar formulario: crear libro nuevo o actualizar existente
-  // ============================================================
   const manejarEnvio = async (e) => {
     e.preventDefault();
-    // Convertir precio y páginas de string a número
     const carga = { ...formulario, precio: parseFloat(formulario.precio), paginas: parseInt(formulario.paginas) || 0 };
     try {
       if (editandoId) {
@@ -64,9 +47,8 @@ export default function AdminLibros() {
         agregarToast('Libro creado');
       }
       limpiarFormulario();
-      cargarLibros(); // Recargar la tabla
+      cargarLibros();
     } catch {
-      // Modo demo: simular creación/edición localmente si la API falla
       const nuevoLibro = { _id: 'mock_' + Date.now(), ...carga };
       setLibros((anterior) => editandoId
         ? anterior.map((l) => l._id === editandoId ? { ...l, ...carga } : l)
@@ -77,7 +59,6 @@ export default function AdminLibros() {
     }
   };
 
-  // Cargar datos de un libro en el formulario para editarlo
   const manejarEditar = (libro) => {
     setFormulario({
       titulo: libro.titulo, autor: libro.autor, descripcion: libro.descripcion,
@@ -89,7 +70,6 @@ export default function AdminLibros() {
     setMostrarFormulario(true);
   };
 
-  // Eliminar un libro con confirmación
   const manejarEliminar = async (id) => {
     if (!confirm('¿Eliminar este libro?')) return;
     try {
@@ -97,7 +77,6 @@ export default function AdminLibros() {
       agregarToast('Libro eliminado');
       cargarLibros();
     } catch {
-      // Modo demo: eliminar localmente
       setLibros((anterior) => anterior.filter((l) => l._id !== id));
       agregarToast('Libro eliminado (demo)');
     }
@@ -112,7 +91,6 @@ export default function AdminLibros() {
         </button>
       </div>
 
-      {/* ========== FORMULARIO DE CREAR/EDITAR ========== */}
       {mostrarFormulario && (
         <form onSubmit={manejarEnvio} className="admin-form">
           <h2>{editandoId ? 'Editar Libro' : 'Nuevo Libro'}</h2>
@@ -147,7 +125,6 @@ export default function AdminLibros() {
               <label>URL de portada</label>
               <input type="text" value={formulario.portada} onChange={(e) => setFormulario({ ...formulario, portada: e.target.value })} />
             </div>
-            {/* Campo para URL del PDF: se usa en el lector de PDF */}
             <div className="input-group full-width">
               <label>URL del PDF</label>
               <input type="text" value={formulario.pdfUrl} onChange={(e) => setFormulario({ ...formulario, pdfUrl: e.target.value })} placeholder="https://ejemplo.com/libro.pdf" />
@@ -168,7 +145,6 @@ export default function AdminLibros() {
         </form>
       )}
 
-      {/* ========== TABLA DE LIBROS ========== */}
       {cargando ? (
         <div className="detail-loading"><div className="spinner" /><p>Cargando libros...</p></div>
       ) : (

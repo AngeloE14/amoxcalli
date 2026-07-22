@@ -1,11 +1,3 @@
-// ============================================================
-// src/pages/Payment.jsx — Página de Pago (Simulado)
-// ============================================================
-// Formulario de pago para comprar un libro individual.
-// Muestra: portada del libro, precio y formulario de pago.
-// IMPORTANTE: El pago es simulado, no conecta con pasarela real.
-// Después del "pago", guarda el libro como "comprado" en localStorage.
-
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { librosAPI, pagosAPI } from '../services/api';
@@ -13,19 +5,18 @@ import { useToast } from '../context/ToastContext';
 import LIBROS_MOCK from '../data/mockBooks';
 
 export default function Pago() {
-  const { id } = useParams();           // ID del libro desde la URL
+  const { id } = useParams();
   const { agregarToast } = useToast();
   const navegar = useNavigate();
   const [libro, setLibro] = useState(null);
   const [cargando, setCargando] = useState(true);
-  const [procesando, setProcesando] = useState(false); // Estado de procesamiento del pago
-  const [metodo, setMetodo] = useState('Tarjeta de crédito'); // Método de pago seleccionado
+  const [procesando, setProcesando] = useState(false);
+  const [metodo, setMetodo] = useState('Tarjeta de crédito');
   const [numeroTarjeta, setNumeroTarjeta] = useState('');
   const [nombreTarjeta, setNombreTarjeta] = useState('');
   const [vencimiento, setVencimiento] = useState('');
   const [cvv, setCvv] = useState('');
 
-  // Cargar datos del libro desde la API
   useEffect(() => {
     librosAPI.getById(id)
       .then(({ data }) => setLibro(data))
@@ -37,28 +28,20 @@ export default function Pago() {
       .finally(() => setCargando(false));
   }, [id, agregarToast]);
 
-  // ============================================================
-  // Procesar pago simulado:
-  // 1. Intentar registrar el pago en el backend (si falla, se ignora)
-  // 2. Guardar el libro como "comprado" (permanent) en localStorage
-  // 3. Redirigir a la biblioteca
-  // ============================================================
+  // Pago simulado: registra en backend (si falla, continúa) y guarda en localStorage
   const manejarPago = async (e) => {
     e.preventDefault();
     setProcesando(true);
-    // Intentar registrar el pago en el backend (si falla, se ignora y se continúa como demo)
     try {
       await pagosAPI.create({ libro: id, monto: libro.precio, metodoPago: metodo, idTransaccion: 'TXN-' + Date.now() });
-    } catch {
-      // pago demo, continuar
-    }
-    // Guardar el libro como "comprado" (permanent) en localStorage
+    } catch { /* pago demo */ }
+
     const biblio = JSON.parse(localStorage.getItem('biblioteca') || '[]');
     if (!biblio.some((item) => item.libro?._id === id)) {
       biblio.push({
         _id: 'bib_' + Date.now(),
         libro,
-        tipoCompra: 'permanent', // 'permanent' = comprado, 'subscription' = guardado
+        tipoCompra: 'permanent',
         createdAt: new Date().toISOString(),
       });
       localStorage.setItem('biblioteca', JSON.stringify(biblio));
@@ -80,7 +63,6 @@ export default function Pago() {
     <div className="payment-page">
       <h1>Comprar Libro</h1>
       <div className="payment-layout">
-        {/* Información del libro a comprar */}
         <div className="payment-book-info">
           <div className="payment-book-cover">
             {libro.portada ? <img src={libro.portada} alt={libro.titulo} /> : <div className="book-card-placeholder large">{libro.titulo[0]}</div>}
@@ -92,10 +74,8 @@ export default function Pago() {
           </div>
         </div>
 
-        {/* Formulario de pago */}
         <form onSubmit={manejarPago} className="payment-form">
           <h2>Método de pago</h2>
-          {/* Selector de método de pago: Tarjeta de crédito, débito o PayPal */}
           <div className="payment-methods">
             {['Tarjeta de crédito', 'Tarjeta de débito', 'PayPal'].map((opcion) => (
               <label key={opcion} className={`payment-method-option ${metodo === opcion ? 'active' : ''}`}>
@@ -104,7 +84,6 @@ export default function Pago() {
               </label>
             ))}
           </div>
-          {/* Campos de tarjeta (solo si no es PayPal) */}
           {metodo !== 'PayPal' && (
             <>
               <div className="input-group">
@@ -127,18 +106,15 @@ export default function Pago() {
               </div>
             </>
           )}
-          {/* Mensaje si elige PayPal */}
           {metodo === 'PayPal' && (
             <div className="paypal-info">
               <p>Serás redirigido a PayPal para completar el pago.</p>
             </div>
           )}
-          {/* Resumen del total */}
           <div className="payment-summary">
             <span>Total a pagar:</span>
             <span className="payment-total">${libro.precio?.toFixed(2)} MXN</span>
           </div>
-          {/* Botón de pago */}
           <button type="submit" className="btn btn-primary btn-lg" disabled={procesando}>
             {procesando ? 'Procesando...' : `Pagar $${libro.precio?.toFixed(2)} MXN`}
           </button>

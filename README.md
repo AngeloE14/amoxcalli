@@ -4,12 +4,40 @@ Plataforma de lectura digital donde puedes explorar, suscribirte y leer libros d
 
 ## Funcionalidades
 
-- **Registro e inicio de sesión** — Crea tu cuenta gratuita y accede a la plataforma
-- **Catálogo de libros** — Explora el catálogo filtrando por género, idioma o autor
-- **Dos planes de suscripción** — Estándar ($79.99 MXN) y Premium ($149.99 MXN), ambos por 3 meses
-- **Lector digital** — Lee tus libros con progreso automático que guarda dónde te quedaste
-- **Biblioteca personal** — Guarda y organiza tus libros adquiridos
-- **Compra de libros individuales** — Adquiere libros sueltos sin necesidad de suscripción
-- **Reseñas y opiniones** — Califica y comenta los libros que leas
-- **Favoritos y lista de deseos** — Guarda libros para leer después
-- **Panel de administrador** — Agrega, edita y elimina libros del catálogo
+- Registro e inicio de sesión
+- Catálogo de libros con filtros por género, idioma y autor
+- Dos planes de suscripción: Estándar ($79.99 MXN) y Premium ($149.99 MXN)
+- Lector de PDF con zoom y progreso automático
+- Biblioteca personal para guardar tus libros
+- Compra de libros individuales
+- Reseñas y opiniones
+- Panel de administrador para gestionar el catálogo
+
+## Cómo ejecutar
+
+1. Clonar el repositorio e instalar dependencias:
+```bash
+git clone https://github.com/tu-usuario/ver_nosql.git
+cd ver_nosql
+npm install
+```
+
+2. Crear un archivo `.env` en la raíz con las siguientes variables:
+```
+MONGO_URI=tu_url_de_mongodb_atlas
+JWT_SECRET=tu_clave_secreta
+PORT=4000
+```
+
+3. Iniciar el servidor backend y el frontend en terminales separadas:
+```bash
+npm run server
+npm run dev
+```
+
+## Tecnologías
+
+- **Frontend:** React, React Router, Vite
+- **Backend:** Express, MongoDB (Mongoose)
+- **Autenticación:** JWT (JSON Web Tokens)
+- **Lector PDF:** pdfjs-dist / react-pdf

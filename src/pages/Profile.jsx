@@ -1,18 +1,9 @@
-// ============================================================
-// src/pages/Profile.jsx — Página de Perfil de Usuario
-// ============================================================
-// Permite al usuario gestionar su cuenta:
-// 1. Información personal: cambiar correo y contraseña
-// 2. Mi plan: cambiar entre Estándar y Premium
-// 3. Zona de peligro: eliminar cuenta permanentemente
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { authAPI } from '../services/api';
 
-// Planes disponibles (deben coincidir con los IDs que maneja el backend)
 const PLANES = [
   { id: 'standard', nombre: 'Estándar', precio: 79.99, descripcion: 'Acceso a hasta 5 libros por 3 meses.' },
   { id: 'premium', nombre: 'Premium', precio: 149.99, descripcion: 'Acceso ilimitado a todo el catálogo por 3 meses.' },
@@ -25,25 +16,20 @@ export default function Perfil() {
   const [correo, setCorreo] = useState(usuario?.correo || '');
   const [contrasenaActual, setContrasenaActual] = useState('');
   const [contrasenaNueva, setContrasenaNueva] = useState('');
-  const [mostrarActual, setMostrarActual] = useState(false); // Toggle ver contraseña actual
-  const [mostrarNueva, setMostrarNueva] = useState(false);   // Toggle ver contraseña nueva
+  const [mostrarActual, setMostrarActual] = useState(false);
+  const [mostrarNueva, setMostrarNueva] = useState(false);
   const [cargando, setCargando] = useState(false);
-  const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false); // Modal de confirmar eliminación
+  const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
   const [cargandoEliminar, setCargandoEliminar] = useState(false);
 
-  // ============================================================
-  // Actualizar perfil: puede cambiar correo, contraseña, o ambos
-  // ============================================================
   const manejarEnvio = async (e) => {
     e.preventDefault();
     setCargando(true);
     try {
-      // Solo actualizar perfil si el correo cambió
       if (correo !== usuario?.correo) {
         const { data } = await authAPI.updateProfile({ nombre: usuario.nombre, correo });
         actualizarUsuario({ correo: data.correo });
       }
-      // Solo cambiar contraseña si ambos campos están llenos
       if (contrasenaActual && contrasenaNueva) {
         await authAPI.changePassword({ contraseñaActual: contrasenaActual, contraseñaNueva: contrasenaNueva });
         setContrasenaActual('');
@@ -59,21 +45,15 @@ export default function Perfil() {
     }
   };
 
-  // ============================================================
-  // Cambiar plan: guarda en el backend (MongoDB) y actualiza localStorage
-  // ============================================================
   const cambiarPlan = async (planId) => {
     try {
-      await seleccionarPlan(planId); // Llama a PUT /api/auth/profile con el nuevo plan
+      await seleccionarPlan(planId);
       agregarToast(`Plan cambiado a ${PLANES.find((p) => p.id === planId).nombre}`);
     } catch {
       agregarToast('No se pudo cambiar el plan. Intenta de nuevo.', 'error');
     }
   };
 
-  // ============================================================
-  // Eliminar cuenta: borra el usuario y cierra sesión
-  // ============================================================
   const eliminarCuenta = async () => {
     setCargandoEliminar(true);
     try {
@@ -93,13 +73,13 @@ export default function Perfil() {
     <div className="profile-page">
       <h1>Mi Perfil</h1>
 
-      {/* ========== SECCIÓN 1: INFORMACIÓN PERSONAL ========== */}
+      {/* Información personal */}
       <div className="profile-section">
         <h2>Información personal</h2>
         <form onSubmit={manejarEnvio} className="auth-form" style={{ maxWidth: '100%' }}>
           <div className="input-group">
             <label htmlFor="nombre-perfil">Nombre</label>
-            <input id="nombre-perfil" type="text" value={usuario?.nombre || ''} disabled /> {/* No editable */}
+            <input id="nombre-perfil" type="text" value={usuario?.nombre || ''} disabled />
           </div>
           <div className="input-group">
             <label htmlFor="correo-perfil">Correo electrónico</label>
@@ -107,12 +87,11 @@ export default function Perfil() {
           </div>
           <div className="input-group">
             <label>Rol</label>
-            <input type="text" value={usuario?.rol === 'admin' ? 'Administrador' : 'Usuario'} disabled /> {/* Solo lectura */}
+            <input type="text" value={usuario?.rol === 'admin' ? 'Administrador' : 'Usuario'} disabled />
           </div>
           <hr style={{ border: '0', borderTop: '1px solid var(--border)', margin: '0.5rem 0 1rem' }} />
           <h3 style={{ fontSize: '1rem', marginBottom: '0.5rem', color: 'var(--text-muted)' }}>Cambiar contraseña</h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-dim)', marginBottom: '1rem' }}>Deja en blanco si no quieres cambiarla.</p>
-          {/* Campo contraseña actual */}
           <div className="input-group">
             <label htmlFor="contrasena-actual">Contraseña actual</label>
             <div className="password-wrapper">
@@ -134,7 +113,6 @@ export default function Perfil() {
               </button>
             </div>
           </div>
-          {/* Campo contraseña nueva */}
           <div className="input-group">
             <label htmlFor="contrasena-nueva">Nueva contraseña</label>
             <div className="password-wrapper">
@@ -162,7 +140,7 @@ export default function Perfil() {
         </form>
       </div>
 
-      {/* ========== SECCIÓN 2: CAMBIAR PLAN ========== */}
+      {/* Cambiar plan */}
       <div className="profile-section">
         <h2>Mi plan</h2>
         <div className="profile-plans">
@@ -183,7 +161,7 @@ export default function Perfil() {
         </div>
       </div>
 
-      {/* ========== SECCIÓN 3: ZONA DE PELIGRO (ELIMINAR CUENTA) ========== */}
+      {/* Zona de peligro */}
       <div className="profile-section" style={{ borderColor: '#e74c3c' }}>
         <h2 style={{ color: '#e74c3c' }}>Zona de peligro</h2>
         <p>Eliminar tu cuenta es permanente. No podrás recuperar tus datos.</p>
@@ -192,7 +170,6 @@ export default function Perfil() {
         </button>
       </div>
 
-      {/* Modal de confirmación para eliminar cuenta */}
       {mostrarConfirmacion && (
         <div className="modal-overlay" onClick={() => setMostrarConfirmacion(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>

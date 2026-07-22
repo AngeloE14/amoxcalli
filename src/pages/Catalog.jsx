@@ -1,18 +1,8 @@
-// ============================================================
-// src/pages/Catalog.jsx — Página del Catálogo de Libros
-// ============================================================
-// Página principal para explorar libros. Incluye:
-// - Búsqueda por título y autor
-// - Filtros por género (tabs), idioma y ordenamiento
-// - Grid de tarjetas de libros con loading skeleton
-// - Fallback a datos mock si la API falla
-
 import { useState, useEffect } from 'react';
 import { librosAPI } from '../services/api';
 import TarjetaLibro from '../components/BookCard';
 import LIBROS_MOCK from '../data/mockBooks';
 
-// Opciones de filtro disponibles
 const GENEROS = ['Todos', 'Novela', 'Ciencia Ficción', 'Fantasía', 'Romance', 'Clásico'];
 const OPCIONES_ORDEN = [
   { valor: '', etiqueta: 'Sin orden' },
@@ -24,10 +14,6 @@ const OPCIONES_ORDEN = [
 ];
 const IDIOMAS = ['', 'Español', 'Inglés'];
 
-// ============================================================
-// Componente de skeleton (esqueleto de carga): se muestra mientras
-// se cargan los datos. Crea 8 tarjetas "fantasma" para dar feedback visual
-// ============================================================
 function EsqueletoCarga() {
   return (
     <div className="books-grid">
@@ -46,21 +32,16 @@ function EsqueletoCarga() {
 }
 
 export default function Catalogo() {
-  const [libros, setLibros] = useState([]);          // Lista de libros a mostrar
-  const [cargando, setCargando] = useState(true);     // Estado de carga
-  const [busqueda, setBusqueda] = useState('');       // Filtro por título
-  const [busquedaAutor, setBusquedaAutor] = useState(''); // Filtro por autor
-  const [generoActivo, setGeneroActivo] = useState('Todos'); // Género seleccionado
-  const [idioma, setIdioma] = useState('');            // Idioma seleccionado
-  const [orden, setOrden] = useState('');              // Ordenamiento seleccionado
+  const [libros, setLibros] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  const [busqueda, setBusqueda] = useState('');
+  const [busquedaAutor, setBusquedaAutor] = useState('');
+  const [generoActivo, setGeneroActivo] = useState('Todos');
+  const [idioma, setIdioma] = useState('');
+  const [orden, setOrden] = useState('');
 
-  // ============================================================
-  // useEffect: Se ejecuta cada vez que cambia un filtro
-  // Reconstruye los parámetros y vuelve a consultar la API
-  // ============================================================
   useEffect(() => {
     setCargando(true);
-    // Construir objeto de parámetros para la API
     const parametros = {};
     if (busqueda) parametros.search = busqueda;
     if (busquedaAutor) parametros.author = busquedaAutor;
@@ -68,11 +49,9 @@ export default function Catalogo() {
     if (idioma) parametros.language = idioma;
     if (orden) parametros.sort = orden;
 
-    // Consultar API con los filtros, o usar mock data si falla
     librosAPI.getAll(parametros)
       .then(({ data }) => setLibros(data))
       .catch(() => {
-        // Fallback: filtrar los datos mock en el navegador
         let filtrados = [...LIBROS_MOCK];
         if (busqueda) filtrados = filtrados.filter((l) => l.titulo.toLowerCase().includes(busqueda.toLowerCase()));
         if (busquedaAutor) filtrados = filtrados.filter((l) => l.autor.toLowerCase().includes(busquedaAutor.toLowerCase()));
@@ -85,22 +64,19 @@ export default function Catalogo() {
         setLibros(filtrados);
       })
       .finally(() => setCargando(false));
-  }, [busqueda, busquedaAutor, generoActivo, idioma, orden]); // Dependencias: re-ejecutar al cambiar
+  }, [busqueda, busquedaAutor, generoActivo, idioma, orden]);
 
   return (
     <div className="catalog-page">
       <h1>Catálogo de Libros</h1>
 
-      {/* ========== BARRA DE BÚSQUEDA Y FILTROS ========== */}
       <div className="catalog-filters">
         <div className="search-row">
-          {/* Búsqueda por título */}
           <div className="search-wrapper">
             <span className="search-icon">🔍</span>
             <input type="text" placeholder="Buscar por título..." value={busqueda} onChange={(e) => setBusqueda(e.target.value)} className="search-input" />
             {busqueda && <button className="search-clear" onClick={() => setBusqueda('')}>✕</button>}
           </div>
-          {/* Búsqueda por autor */}
           <div className="search-wrapper">
             <span className="search-icon">✍️</span>
             <input type="text" placeholder="Buscar por autor..." value={busquedaAutor} onChange={(e) => setBusquedaAutor(e.target.value)} className="search-input" />
@@ -108,14 +84,12 @@ export default function Catalogo() {
           </div>
         </div>
         <div className="filter-row">
-          {/* Filtro de idioma */}
           <select value={idioma} onChange={(e) => setIdioma(e.target.value)} className="filter-select">
             <option value="">Todos los idiomas</option>
             {IDIOMAS.filter(Boolean).map((idioma) => (
               <option key={idioma} value={idioma}>{idioma}</option>
             ))}
           </select>
-          {/* Filtro de ordenamiento */}
           <select value={orden} onChange={(e) => setOrden(e.target.value)} className="filter-select">
             {OPCIONES_ORDEN.map((opcion) => (
               <option key={opcion.valor} value={opcion.valor}>{opcion.etiqueta}</option>
@@ -124,7 +98,6 @@ export default function Catalogo() {
         </div>
       </div>
 
-      {/* ========== TABS DE GÉNERO ========== */}
       <div className="genre-tabs">
         {GENEROS.map((genero) => (
           <button key={genero} className={`genre-tab ${generoActivo === genero ? 'active' : ''}`} onClick={() => setGeneroActivo(genero)}>
@@ -133,7 +106,6 @@ export default function Catalogo() {
         ))}
       </div>
 
-      {/* ========== CONTENIDO: Loading / Empty / Grid de libros ========== */}
       {cargando ? (
         <EsqueletoCarga />
       ) : libros.length === 0 ? (
